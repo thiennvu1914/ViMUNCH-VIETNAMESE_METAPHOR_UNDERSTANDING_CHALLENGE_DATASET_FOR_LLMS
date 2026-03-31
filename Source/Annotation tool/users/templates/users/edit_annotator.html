@@ -1,0 +1,75 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Chỉnh Sửa Thông Tin{% endblock %}
+
+{% block content %}
+<style>
+    .edit-form-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 2.5rem 2rem;
+        max-width: 650px;
+        margin: 3rem auto;
+        transition: all 0.3s ease;
+    }
+    .edit-form-card:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+    }
+    .edit-title {
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.7rem;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.8rem;
+    }
+    form label {
+        font-weight: 500;
+        margin-bottom: 0.4rem;
+        color: #333;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        padding: 0.6rem 0.9rem;
+        transition: all 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+    }
+    .btn-update {
+        width: 100%;
+        margin-top: 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.8rem 1rem;
+        background: linear-gradient(90deg, #007bff, #00b4d8);
+        border: none;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .btn-update:hover {
+        transform: scale(1.03);
+        background: linear-gradient(90deg, #0069d9, #00a8c6);
+    }
+</style>
+
+<div class="edit-form-card">
+    <h2 class="edit-title">Chỉnh Sửa Thông Tin</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group mb-3">
+            {{ form.as_p }}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-update shadow-sm">
+            <i class="bi bi-check-circle"></i> Cập nhật
+        </button>
+    </form>
+</div>
+{% endblock %}

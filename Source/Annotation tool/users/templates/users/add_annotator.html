@@ -1,0 +1,82 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Thêm Annotator{% endblock %}
+
+{% block content %}
+<style>
+    .add-annotator-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        padding: 2.5rem 2rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .add-annotator-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .add-annotator-title {
+        font-weight: 700;
+        text-align: center;
+        color: #007bff;
+        margin-bottom: 1.8rem;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    form label {
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        color: #333;
+    }
+    form input, form select {
+        border-radius: 10px !important;
+        border: 1px solid #ddd;
+        padding: 0.65rem 0.9rem;
+        transition: all 0.2s ease;
+    }
+    form input:focus, form select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+    }
+    .btn-submit {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .btn-submit:hover {
+        transform: scale(1.05);
+        background: linear-gradient(90deg, #007bff, #00b4d8);
+        color: #fff;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="add-annotator-card">
+                <h3 class="add-annotator-title">
+                    <i class="bi bi-person-plus-fill"></i> Thêm Annotator Mới
+                </h3>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-submit shadow-sm">
+                            <i class="bi bi-check-circle"></i> Thêm Annotator
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,308 @@
+Folder PATH listing
+Volume serial number is 4286-B59B
+C:.
+|   manage.py
+|   structure.txt
+|   
++---others
+|       check_incomplete_mi.py
+|       
++---Raw dataset
+|       ViMUNCH_Part1.json
+|       ViMUNCH_Part3.json
+|       
++---static
+|   +---css
+|   |       styles.css
+|   |       
+|   \---docs
+|           guideline.pdf
+|           
++---staticfiles
+|   +---admin
+|   |   +---css
+|   |   |   |   autocomplete.css
+|   |   |   |   base.css
+|   |   |   |   changelists.css
+|   |   |   |   dark_mode.css
+|   |   |   |   dashboard.css
+|   |   |   |   forms.css
+|   |   |   |   login.css
+|   |   |   |   nav_sidebar.css
+|   |   |   |   responsive.css
+|   |   |   |   responsive_rtl.css
+|   |   |   |   rtl.css
+|   |   |   |   unusable_password_field.css
+|   |   |   |   widgets.css
+|   |   |   |   
+|   |   |   \---vendor
+|   |   |       \---select2
+|   |   |               LICENSE-SELECT2.md
+|   |   |               select2.css
+|   |   |               select2.min.css
+|   |   |               
+|   |   +---img
+|   |   |   |   calendar-icons.svg
+|   |   |   |   icon-addlink.svg
+|   |   |   |   icon-alert.svg
+|   |   |   |   icon-calendar.svg
+|   |   |   |   icon-changelink.svg
+|   |   |   |   icon-clock.svg
+|   |   |   |   icon-deletelink.svg
+|   |   |   |   icon-hidelink.svg
+|   |   |   |   icon-no.svg
+|   |   |   |   icon-unknown-alt.svg
+|   |   |   |   icon-unknown.svg
+|   |   |   |   icon-viewlink.svg
+|   |   |   |   icon-yes.svg
+|   |   |   |   inline-delete.svg
+|   |   |   |   LICENSE
+|   |   |   |   README.txt
+|   |   |   |   search.svg
+|   |   |   |   selector-icons.svg
+|   |   |   |   sorting-icons.svg
+|   |   |   |   tooltag-add.svg
+|   |   |   |   tooltag-arrowright.svg
+|   |   |   |   
+|   |   |   \---gis
+|   |   |           move_vertex_off.svg
+|   |   |           move_vertex_on.svg
+|   |   |           
+|   |   \---js
+|   |       |   actions.js
+|   |       |   autocomplete.js
+|   |       |   calendar.js
+|   |       |   cancel.js
+|   |       |   change_form.js
+|   |       |   core.js
+|   |       |   filters.js
+|   |       |   inlines.js
+|   |       |   jquery.init.js
+|   |       |   nav_sidebar.js
+|   |       |   popup_response.js
+|   |       |   prepopulate.js
+|   |       |   prepopulate_init.js
+|   |       |   SelectBox.js
+|   |       |   SelectFilter2.js
+|   |       |   theme.js
+|   |       |   unusable_password_field.js
+|   |       |   urlify.js
+|   |       |   
+|   |       +---admin
+|   |       |       DateTimeShortcuts.js
+|   |       |       RelatedObjectLookups.js
+|   |       |       
+|   |       \---vendor
+|   |           +---jquery
+|   |           |       jquery.js
+|   |           |       jquery.min.js
+|   |           |       LICENSE.txt
+|   |           |       
+|   |           +---select2
+|   |           |   |   LICENSE.md
+|   |           |   |   select2.full.js
+|   |           |   |   select2.full.min.js
+|   |           |   |   
+|   |           |   \---i18n
+|   |           |           af.js
+|   |           |           ar.js
+|   |           |           az.js
+|   |           |           bg.js
+|   |           |           bn.js
+|   |           |           bs.js
+|   |           |           ca.js
+|   |           |           cs.js
+|   |           |           da.js
+|   |           |           de.js
+|   |           |           dsb.js
+|   |           |           el.js
+|   |           |           en.js
+|   |           |           es.js
+|   |           |           et.js
+|   |           |           eu.js
+|   |           |           fa.js
+|   |           |           fi.js
+|   |           |           fr.js
+|   |           |           gl.js
+|   |           |           he.js
+|   |           |           hi.js
+|   |           |           hr.js
+|   |           |           hsb.js
+|   |           |           hu.js
+|   |           |           hy.js
+|   |           |           id.js
+|   |           |           is.js
+|   |           |           it.js
+|   |           |           ja.js
+|   |           |           ka.js
+|   |           |           km.js
+|   |           |           ko.js
+|   |           |           lt.js
+|   |           |           lv.js
+|   |           |           mk.js
+|   |           |           ms.js
+|   |           |           nb.js
+|   |           |           ne.js
+|   |           |           nl.js
+|   |           |           pl.js
+|   |           |           ps.js
+|   |           |           pt-BR.js
+|   |           |           pt.js
+|   |           |           ro.js
+|   |           |           ru.js
+|   |           |           sk.js
+|   |           |           sl.js
+|   |           |           sq.js
+|   |           |           sr-Cyrl.js
+|   |           |           sr.js
+|   |           |           sv.js
+|   |           |           th.js
+|   |           |           tk.js
+|   |           |           tr.js
+|   |           |           uk.js
+|   |           |           vi.js
+|   |           |           zh-CN.js
+|   |           |           zh-TW.js
+|   |           |           
+|   |           \---xregexp
+|   |                   LICENSE.txt
+|   |                   xregexp.js
+|   |                   xregexp.min.js
+|   |                   
+|   +---css
+|   |       styles.css
+|   |       
+|   \---docs
+|           guideline.pdf
+|           
++---task
+|   |   admin.py
+|   |   apps.py
+|   |   forms.py
+|   |   models.py
+|   |   tests.py
+|   |   urls.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   +---management
+|   |   |   __init__.py
+|   |   |   
+|   |   +---commands
+|   |   |   |   backfill.py
+|   |   |   |   cleanup_stubs.py
+|   |   |   |   create_stubs.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           backfill.cpython-310.pyc
+|   |   |           create_stubs.cpython-310.pyc
+|   |   |           create_stub_from_json.cpython-310.pyc
+|   |   |           __init__.cpython-310.pyc
+|   |   |           
+|   |   \---__pycache__
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---migrations
+|   |   |   0001_initial.py
+|   |   |   0002_initial.py
+|   |   |   0003_alter_metaphorinterpretation_annotator.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           0001_initial.cpython-310.pyc
+|   |           0002_initial.cpython-310.pyc
+|   |           0003_alter_metaphorinterpretation_annotator.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---templates
+|   |   \---task
+|   |           annotator_dashboard.html
+|   |           assign_task.html
+|   |           dashboard.html
+|   |           import_data.html
+|   |           manage_task.html
+|   |           metaphor_interpretation_and_classification_task.html
+|   |           no_more_sentences.html
+|   |           paraphrase_judgement_task.html
+|   |           task_assignment_list.html
+|   |           
+|   +---templatetags
+|   |   |   custom_filters.py
+|   |   |   form_tags.py
+|   |   |   highlight.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           custom_filters.cpython-310.pyc
+|   |           form_tags.cpython-310.pyc
+|   |           highlight.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           apps.cpython-310.pyc
+|           forms.cpython-310.pyc
+|           models.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           views.cpython-310.pyc
+|           __init__.cpython-310.pyc
+|           
++---templates
+|       base_generic.html
+|       home.html
+|       
++---users
+|   |   admin.py
+|   |   apps.py
+|   |   forms.py
+|   |   models.py
+|   |   tests.py
+|   |   urls.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   +---migrations
+|   |   |   0001_initial.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           0001_initial.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---templates
+|   |   \---users
+|   |           add_annotator.html
+|   |           annotator_detail.html
+|   |           annotator_list.html
+|   |           change_password.html
+|   |           edit_annotator.html
+|   |           edit_profile.html
+|   |           login.html
+|   |           profile.html
+|   |           
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           apps.cpython-310.pyc
+|           forms.cpython-310.pyc
+|           models.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           views.cpython-310.pyc
+|           __init__.cpython-310.pyc
+|           
+\---ViMUNCH
+    |   asgi.py
+    |   settings.py
+    |   urls.py
+    |   views.py
+    |   wsgi.py
+    |   __init__.py
+    |   
+    +---templates
+    \---__pycache__
+            settings.cpython-310.pyc
+            urls.cpython-310.pyc
+            views.cpython-310.pyc
+            wsgi.cpython-310.pyc
+            __init__.cpython-310.pyc
+            

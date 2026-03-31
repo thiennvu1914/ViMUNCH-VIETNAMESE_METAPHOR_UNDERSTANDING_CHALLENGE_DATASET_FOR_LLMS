@@ -1,0 +1,117 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Danh sách Annotators{% endblock %}
+
+{% block content %}
+<style>
+    .annotator-container {
+        max-width: 1100px;
+        margin: 3rem auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        padding: 2rem 2.5rem;
+    }
+    h2.page-title {
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        border: none;
+        transition: all 0.2s ease;
+        color: #fff;
+        text-decoration: none;
+    }
+    .btn-add:hover {
+        transform: scale(1.03);
+        background: linear-gradient(90deg, #0069d9, #00b4d8);
+        color: #fff;
+    }
+    table.annotator-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    table.annotator-table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        text-align: center;
+    }
+    table.annotator-table td, table.annotator-table th {
+        vertical-align: middle;
+        text-align: center;
+        padding: 0.8rem;
+    }
+    tr:hover {
+        background: #f6fbff !important;
+    }
+    .btn-sm {
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .btn-info { background-color: #17a2b8; border: none; }
+    .btn-warning { background-color: #ffc107; border: none; color: #333; }
+    .btn-danger { background-color: #dc3545; border: none; }
+    .btn-info:hover { background-color: #0d95a5; }
+    .btn-warning:hover { background-color: #ffb700; }
+    .btn-danger:hover { background-color: #c82333; }
+</style>
+
+<div class="annotator-container">
+    <h2 class="page-title">Danh Sách Annotators</h2>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'users:add_annotator' %}" class="btn-add">
+            <i class="bi bi-person-plus"></i> Thêm Annotator
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table annotator-table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Tên đầy đủ</th>
+                    <th>Email</th>
+                    <th>Điện thoại</th>
+                    <th>Chức vụ</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for annotator in annotators %}
+                    <tr>
+                        <td>{{ annotator.full_name }}</td>
+                        <td>{{ annotator.email }}</td>
+                        <td>{{ annotator.phone }}</td>
+                        <td>{{ annotator.get_role_display }}</td>
+                        <td>
+                            <a href="{% url 'users:annotator_detail' annotator.id %}" class="btn btn-info btn-sm">Chi tiết</a>
+                            <a href="{% url 'users:edit_annotator' annotator.id %}" class="btn btn-warning btn-sm">Sửa</a>
+                            <a href="{% url 'users:delete_annotator' annotator.id %}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa annotator này?')"
+                               class="btn btn-danger btn-sm">Xóa</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-4">Chưa có annotator nào.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

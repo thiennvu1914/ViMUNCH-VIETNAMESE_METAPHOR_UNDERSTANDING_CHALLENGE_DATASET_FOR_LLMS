@@ -1,0 +1,85 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Trang Cá Nhân{% endblock %}
+
+{% block content %}
+<style>
+    .profile-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        padding: 2.5rem 2rem;
+        max-width: 650px;
+        margin: 2rem auto;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .profile-card:hover {
+        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+    .profile-header {
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .profile-info {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .profile-info li {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 1.05rem;
+    }
+    .profile-info li:last-child {
+        border-bottom: none;
+    }
+    .profile-info strong {
+        color: #007bff;
+    }
+    .btn-custom {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        margin: 0.3rem;
+        transition: transform 0.2s ease;
+    }
+    .btn-custom:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="profile-card">
+    <h2 class="profile-header">Thông tin cá nhân</h2>
+
+    <ul class="profile-info">
+        <li><strong>Tên đầy đủ:</strong> {{ user.full_name }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Số điện thoại:</strong> {{ user.phone|default:"—" }}</li>
+        <li><strong>Chuyên môn:</strong> {{ user.expertise|default:"—" }}</li>
+        <li><strong>Kinh nghiệm:</strong> {{ user.experience_years|default:"—" }} năm</li>
+    </ul>
+
+    <div class="mt-4">
+        <a href="{% url 'users:edit_profile' %}" class="btn btn-warning btn-custom">
+            <i class="bi bi-pencil-square"></i> Chỉnh sửa
+        </a>
+        <a href="{% url 'users:change_password' %}" class="btn btn-info btn-custom text-white">
+            <i class="bi bi-lock"></i> Đổi mật khẩu
+        </a>
+    </div>
+
+    {% if messages %}
+        <div class="alert alert-danger mt-4 text-start">
+            <ul class="mb-0">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

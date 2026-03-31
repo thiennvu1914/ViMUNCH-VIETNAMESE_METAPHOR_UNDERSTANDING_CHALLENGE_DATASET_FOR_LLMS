@@ -1,0 +1,456 @@
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+      <div class="card shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-dark text-white fw-semibold">🗂 Danh sách Câu Ẩn Dụ</div>
+        <ul class="list-group list-group-flush" style="max-height: 600px; overflow-y: auto;" id="sidebar-list">
+          {% for item in assigned_datasets %}
+            {% with item.id|stringformat:"s" as item_id %}
+            <li class="list-group-item d-flex justify-content-between align-items-center 
+              {% if item.id == dataset.id %} active text-white bg-primary {% elif item_id in submitted_ids %} list-group-item-success {% endif %}"
+              {% if item.id == dataset.id %}id="active-item"{% endif %}>
+              <a href="?id={{ item.id }}" class="{% if item.id == dataset.id %}text-white{% else %}text-dark{% endif %}" style="text-decoration: none;">
+                {{ item.sentence|truncatechars:50 }}
+              </a>
+              {% if item_id in submitted_ids %}
+                <i class="bi bi-check-circle-fill text-success ms-1" style="font-size: 1.1rem;"></i>
+              {% endif %}
+            </li>
+            {% endwith %}
+          {% empty %}
+            <li class="list-group-item text-muted">Không có câu nào được giao.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="col-md-9">
+      <div class="card shadow rounded-4">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+          <h5 class="mb-0">📝 Diễn Giải & Phân Loại Câu Ẩn Dụ</h5>
+        </div>
+        <div class="card-body">
+
+          <!-- Hiển thị annotator cho admin -->
+          {% if is_admin_user %}
+            {% if annotator_name %}
+              <div class="alert alert-info mb-3">
+                Annotator: <strong>{{ annotator_name }}</strong>
+              </div>
+            {% else %}
+              <div class="alert alert-warning mb-3">
+                Chưa có annotator nào làm câu này.
+              </div>
+            {% endif %}
+          {% endif %}
+
+          <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- ======= Câu ẩn dụ với highlight ======= -->
+            <div class="mb-4">
+              <label class="fw-semibold">Câu ẩn dụ (bôi đen để chọn phần ẩn dụ):</label>
+              <div id="metaphor-sentence"
+                   class="bg-light p-3 rounded border"
+                   style="min-height: 40px; cursor: text; user-select: text;"></div>
+
+              <!-- Popover: diễn giải span -->
+              <div id="popover"
+                   style="display:none; position:absolute; z-index:1000; background:#fff; border:1px solid #ccc; padding:8px; border-radius:6px; min-width:280px;">
+                <div class="small text-muted mb-1"><b>Diễn giải cho vùng bôi đen</b></div>
+                <textarea id="span-interpretation" class="form-control mb-2" rows="2" placeholder="Nhập diễn giải cho span này"></textarea>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="saveSpan()">Lưu</button>
+                  <button type="button" class="btn btn-link btn-sm" onclick="closePopover()">Hủy</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden JSON các span -->
+            {{ form.metaphor_phrases }}
+            {{ proposed_spans|default:"[]"|json_script:"proposedSpans" }}
+            {{ initial_types|default:"[]"|json_script:"initialTypes" }}
+
+            <!-- ======= Phân loại ẩn dụ CHO CẢ CÂU ======= -->
+            <div class="card mb-3">
+              <div class="card-header fw-semibold">🏷️ Phân loại ẩn dụ cho cả câu (có thể chọn nhiều loại)</div>
+              <div class="card-body row">
+                {% for cb in form.metaphor_types %}
+                  <div class="col-6 col-md-4 mb-2 form-check">
+                    {{ cb.tag }} <label class="form-check-label">{{ cb.choice_label }}</label>
+                  </div>
+                {% endfor %}
+                {% if form.errors.metaphor_types %}
+                  <div class="text-danger small">{{ form.errors.metaphor_types.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Diễn Giải cả câu & Ghi chú -->
+            <div class="mb-3">
+              <label class="form-label">Diễn giải cả câu</label>
+              {{ form.interpretation }}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Ghi chú (nếu có)</label>
+              {{ form.notes }}
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success btn-lg rounded-3">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .highlighted-metaphor {
+    background: #ffe066;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin: 1px 2px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .highlighted-metaphor:hover { background: #ffe799; }
+  .highlighted-metaphor .remove-span-btn {
+    position: absolute; top: -6px; right: -8px;
+    color: #d90429; background: #fff3; border: none; border-radius: 50%;
+    font-size: 12px; width: 18px; height: 18px; line-height: 15px; cursor: pointer; display: none;
+  }
+  .highlighted-metaphor:hover .remove-span-btn { display: inline; }
+  .highlighted-metaphor .span-interpretation {
+    display: block; font-size: 0.96em; margin-top: 2px; color: #444;
+    background: #f8f9fa; border-radius: 3px; padding: 1px 4px;
+  }
+</style>
+
+<script>
+// --------- Sidebar auto-scroll to active ---------
+document.addEventListener('DOMContentLoaded', function() {
+  const active = document.getElementById('active-item');
+  const sidebar = document.getElementById('sidebar-list');
+  if (active && sidebar) {
+    sidebar.scrollTop = active.offsetTop - sidebar.offsetHeight/2 + active.offsetHeight/2;
+  }
+});
+
+// --------- Highlight & annotation logic ---------
+let spans = [];
+const sentence = `{{ dataset.sentence|escapejs }}`;
+let nodeOffsetMap = [];
+
+// Lấy input thật của Django form
+const hiddenInput = document.getElementById('id_metaphor_phrases');
+
+/* ===== Helpers: chuẩn hoá + sửa off-by-one ===== */
+function findNextNonOverlappingIndex(haystack, needle, takenRanges) {
+  if (!needle) return -1;
+  let from = 0;
+  while (from <= haystack.length - needle.length) {
+    const i = haystack.indexOf(needle, from);
+    if (i === -1) return -1;
+    const j = i + needle.length;
+    const overlapped = takenRanges.some(r => Math.max(i, r.start) < Math.min(j, r.end));
+    if (!overlapped) { takenRanges.push({start: i, end: j}); return i; }
+    from = i + 1;
+  }
+  return -1;
+}
+
+function normalizeLoadedSpans(raw, sentence) {
+  const out = [];
+  const taken = [];
+  if (!Array.isArray(raw)) return out;
+
+  function fixIndices(start, end, phrase) {
+    if (typeof start !== 'number' || typeof end !== 'number' || start >= end) return [start, end];
+    while (start < end && sentence[start] === ' ') start++;
+    while (start < end && sentence[end - 1] === ' ') end--;
+    if (phrase) {
+      const sliced = sentence.slice(start, end);
+      if (sliced !== phrase) {
+        if (sentence.slice(start, end + 1) === phrase) {
+          end = end + 1; // end-inclusive -> exclusive
+        } else {
+          const idx = findNextNonOverlappingIndex(sentence, phrase, taken);
+          if (idx !== -1) return [idx, idx + phrase.length];
+        }
+      }
+    }
+    return [start, end];
+  }
+
+  for (const it of raw) {
+    if (it && typeof it === 'object' && !Array.isArray(it)) {
+      const phrase = it.phrase || it.text || (
+        typeof it.start === 'number' && typeof it.end === 'number'
+          ? sentence.slice(it.start, it.end) : ''
+      );
+      let start = typeof it.start === 'number' ? it.start : undefined;
+      let end   = typeof it.end   === 'number' ? it.end   : undefined;
+
+      if ((start === undefined || end === undefined) && phrase) {
+        const idx = findNextNonOverlappingIndex(sentence, phrase, taken);
+        if (idx !== -1) { start = idx; end = idx + phrase.length; }
+      } else if (phrase) {
+        [start, end] = fixIndices(start, end, phrase);
+      }
+      if (typeof start === 'number' && typeof end === 'number' && start < end) {
+        out.push({ phrase, start, end, type: it.type || '', interpretation: it.interpretation || '' });
+      }
+      continue;
+    }
+
+    if (Array.isArray(it) && it.length >= 3) {
+      const phrase = String(it[0] ?? '').trim();
+      let start = Number(it[1]), end = Number(it[2]);
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start >= end) {
+        const idx = findNextNonOverlappingIndex(sentence, phrase, taken);
+        if (idx !== -1) { start = idx; end = idx + phrase.length; }
+      } else {
+        [start, end] = fixIndices(start, end, phrase);
+      }
+      if (Number.isFinite(start) && Number.isFinite(end) && start < end) {
+        out.push({ phrase, start, end, type: (it[3] ?? '') || '', interpretation: (it[4] ?? '') || '' });
+      }
+      continue;
+    }
+
+    if (typeof it === 'string') {
+      const phrase = it.trim();
+      if (!phrase) continue;
+      const idx = findNextNonOverlappingIndex(sentence, phrase, taken);
+      if (idx !== -1) out.push({ phrase, start: idx, end: idx + phrase.length, type: '', interpretation: '' });
+    }
+  }
+  const seen = new Set();
+  return out.filter(d => {
+    const k = `${d.start}:${d.end}`;
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+}
+
+/* ===== Fallback: lấy spans từ proposedSpans nếu form trống ===== */
+function loadSpansFromHidden(){
+  let raw = [];
+  try { raw = hiddenInput && hiddenInput.value ? JSON.parse(hiddenInput.value) : []; } catch(e) { raw = []; }
+
+  if (!Array.isArray(raw) || raw.length === 0) {
+    try {
+      const el = document.getElementById('proposedSpans');
+      if (el && el.textContent) {
+        raw = JSON.parse(el.textContent);
+      }
+    } catch (e) { /* ignore */ }
+  }
+  spans = normalizeLoadedSpans(raw, sentence);
+  syncHidden(); // để khi Submit sẽ lưu đúng cấu trúc mới
+}
+
+/* ===== Render câu + highlight (sử dụng index gốc để xoá/sửa) ===== */
+function renderSentence() {
+  const container = document.getElementById('metaphor-sentence');
+  container.innerHTML = '';
+  nodeOffsetMap = [];
+  let last = 0;
+
+  // tạo mảng đã sort nhưng giữ chỉ số gốc
+  const sorted = spans.map((s, idx) => ({...s, _idx: idx}))
+                      .sort((a,b) => (a.start||0) - (b.start||0));
+
+  for (let i=0; i<sorted.length; i++) {
+    const s = sorted[i];
+    if (s.start > last) {
+      const text = sentence.slice(last, s.start);
+      const tn = document.createTextNode(text);
+      nodeOffsetMap.push({ node: tn, start: last, end: s.start });
+      container.appendChild(tn);
+    }
+
+    const spanEl = document.createElement('span');
+    spanEl.className = 'highlighted-metaphor';
+    spanEl.setAttribute('data-idx', s._idx);
+    if (s.type) spanEl.title = labelForType(s.type);
+
+    // Click để edit đúng chỉ số gốc
+    spanEl.onclick = function(ev){ editSpan(s._idx); ev.stopPropagation(); };
+
+    const text = sentence.slice(s.start, s.end);
+    const tn = document.createTextNode(text);
+    nodeOffsetMap.push({ node: tn, start: s.start, end: s.end });
+    spanEl.appendChild(tn);
+
+    // Nút xoá đúng chỉ số gốc
+    const btn = document.createElement('button');
+    btn.type = "button";
+    btn.className = "remove-span-btn";
+    btn.innerHTML = "&times;";
+    btn.onclick = function(e){ removeSpan(s._idx); e.stopPropagation(); };
+    spanEl.appendChild(btn);
+
+    if (s.type) {
+      const badge = document.createElement('span');
+      badge.className = "badge bg-secondary ms-2";
+      badge.innerText = labelForType(s.type);
+      spanEl.appendChild(badge);
+    }
+
+    if (s.interpretation) {
+      const div = document.createElement('div');
+      div.className = "span-interpretation";
+      div.innerText = s.interpretation;
+      spanEl.appendChild(div);
+    }
+
+    container.appendChild(spanEl);
+    last = s.end;
+  }
+  if (last < sentence.length) {
+    const text = sentence.slice(last);
+    const tn = document.createTextNode(text);
+    nodeOffsetMap.push({ node: tn, start: last, end: sentence.length });
+    container.appendChild(tn);
+  }
+}
+
+/* ===== Edit / Create span ===== */
+function editSpan(idx){
+  const span = spans[idx];
+  window.editingSpanIdx = idx;
+  window.curSpan = { ...span };
+
+  const pop = document.getElementById('popover');
+  pop.style.display = 'block';
+  pop.style.visibility = 'hidden';
+
+  const left = window.innerWidth/2 - pop.offsetWidth/2 + window.scrollX;
+  const top  = window.innerHeight/2 - pop.offsetHeight/2 + window.scrollY;
+  pop.style.left = left+'px';
+  pop.style.top  = top +'px';
+  pop.style.visibility = 'visible';
+
+  document.getElementById('span-interpretation').value = span.interpretation || '';
+}
+
+function getOffsetFromSelection(sel){
+  if (!sel.anchorNode || sel.isCollapsed) return null;
+  const aNode = sel.anchorNode.nodeType === 3 ? sel.anchorNode : sel.anchorNode.childNodes[0];
+  const fNode = sel.focusNode.nodeType  === 3 ? sel.focusNode  : sel.focusNode.childNodes[0];
+  const aOff = sel.anchorOffset, fOff = sel.focusOffset;
+  const a = nodeOffsetMap.find(e => e.node === aNode);
+  const f = nodeOffsetMap.find(e => e.node === fNode);
+  if (!a || !f) return null;
+  let s = a.start + aOff, e = f.start + fOff;
+  if (s > e) [s, e] = [e, s];
+  while (sentence[s] === ' ' && s < e) s++;
+  while (sentence[e-1] === ' ' && e > s) e--;
+  return {absStart: s, absEnd: e};
+}
+
+document.getElementById('metaphor-sentence').addEventListener('mouseup', function(){
+  const sel = window.getSelection();
+  const text = sel.toString().trim();
+  if (!text) { closePopover(); return; }
+  const off = getOffsetFromSelection(sel);
+  if (!off) { closePopover(); return; }
+  const {absStart, absEnd} = off;
+
+  if (spans.some(s => Math.max(absStart, s.start) < Math.min(absEnd, s.end))) {
+    closePopover(); return;
+  }
+
+  window.curSpan = { phrase: text, start: absStart, end: absEnd, type: '', interpretation: '' };
+  window.editingSpanIdx = undefined;
+
+  const pop = document.getElementById('popover');
+  pop.style.display = 'block';
+  pop.style.visibility = 'hidden';
+  const left = window.innerWidth/2 - pop.offsetWidth/2 + window.scrollX;
+  const top  = window.innerHeight/2 - pop.offsetHeight/2 + window.scrollY;
+  pop.style.left = left+'px';
+  pop.style.top  = top +'px';
+  pop.style.visibility = 'visible';
+
+  document.getElementById('span-interpretation').value = '';
+});
+
+function saveSpan(){
+  if (!window.curSpan) return;
+  window.curSpan.interpretation = document.getElementById('span-interpretation').value.trim();
+
+  if (typeof window.editingSpanIdx === 'number') {
+    spans[window.editingSpanIdx] = { ...window.curSpan };
+  } else {
+    spans.push({ ...window.curSpan });
+  }
+  window.curSpan = null;
+  window.editingSpanIdx = undefined;
+
+  closePopover();
+  syncHidden();
+  renderSentence();
+}
+
+function closePopover(){
+  document.getElementById('popover').style.display = 'none';
+  window.getSelection().removeAllRanges();
+  document.getElementById('span-interpretation').value = '';
+  window.curSpan = null;
+  window.editingSpanIdx = undefined;
+}
+
+function removeSpan(idx){
+  spans.splice(idx, 1);           // idx là chỉ số gốc → xoá đúng phần
+  syncHidden();
+  renderSentence();
+}
+
+function syncHidden(){
+  hiddenInput.value = JSON.stringify(spans);
+}
+
+function labelForType(t){
+  switch(t){
+    case 'structural': return 'Ẩn dụ cấu trúc';
+    case 'ontological': return 'Ẩn dụ bản thể';
+    case 'cultural_folklore':
+    case 'cultural':    return 'Ẩn dụ văn hóa dân gian';
+    case 'emotional':   return 'Ẩn dụ cảm xúc';
+    case 'orientational': return 'Ẩn dụ định hướng';
+    default: return t || '';
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', function(){
+  // 1) Prefill spans
+  loadSpansFromHidden();
+  renderSentence();
+
+  // 2) Fallback tick loại ẩn dụ nếu vì lý do nào đó widget chưa nhận initial
+  try {
+    const el = document.getElementById('initialTypes');
+    if (el && el.textContent) {
+      const types = JSON.parse(el.textContent || '[]');
+      types.forEach(v => {
+        const input = document.querySelector(`input[name="metaphor_types"][value="${v}"]`);
+        if (input) input.checked = true;
+      });
+    }
+  } catch(e) {}
+});
+</script>
+{% endblock %}

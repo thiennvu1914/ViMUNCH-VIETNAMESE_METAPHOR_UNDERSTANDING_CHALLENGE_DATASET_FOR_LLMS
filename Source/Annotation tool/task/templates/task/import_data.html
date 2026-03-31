@@ -1,0 +1,45 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4 text-primary fw-bold">
+                        <i class="bi bi-upload"></i> Import Dữ Liệu JSON
+                    </h2>
+
+                        <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="json_file" class="form-label">Chọn file JSON</label>
+                            <input class="form-control" type="file" name="json_file" id="json_file"
+                                accept="application/json,.json" required>
+                            <div class="form-text">
+                            Hỗ trợ JSON, JSON Lines, <code>[...]</code> hoặc <code>{"data":[...]}</code>.
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload
+                            </button>
+                        </div>
+                        </form>
+
+                    {% if messages %}
+                    <div class="mt-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

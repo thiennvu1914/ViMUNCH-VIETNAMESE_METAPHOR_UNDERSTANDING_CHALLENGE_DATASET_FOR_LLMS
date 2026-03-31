@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="text-center mt-5">
+        <h1>Welcome to <span class="text-primary">UIT-ViMUNCH Tool</span></h1>
+        <p class="lead">- Annotation Tool -</p>
+    </div>
+    
+    {% if user.is_authenticated %}
+        <div class="alert alert-info text-center mt-4">
+            <p>Hello, <strong>{{ user.full_name }}</strong>!</p>
+        </div>
+
+    {% else %}
+        <div class="text-center mt-4">
+            <a href="{% url 'users:login' %}" class="btn btn-primary">Log In</a>
+        </div>
+    {% endif %}
+{% endblock %}

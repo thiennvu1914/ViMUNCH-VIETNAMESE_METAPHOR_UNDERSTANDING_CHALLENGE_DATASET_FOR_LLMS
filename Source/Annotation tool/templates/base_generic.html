@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ViMUNCH - Annotation Tool{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        /* Navbar nổi và đổ bóng */
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #007bff !important;
+            transition: transform 0.2s ease;
+        }
+        .navbar-brand:hover { transform: scale(1.05); }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            color: #343a40 !important;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 2px; width: 0;
+            background: linear-gradient(to right, #007bff, #00c6ff);
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: #007bff !important; }
+        .nav-link.active { font-weight: bold; color: #007bff !important; }
+
+        /* Offcanvas chiều rộng 50% */
+        #guidelineCanvas { width: 50vw; max-width: none; }
+
+        body { scroll-padding-top: 80px; }
+    </style>
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+        UIT-ViMUNCH Tool
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+
+          <!-- Luôn hiển thị GUIDELINE -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="offcanvas"
+               data-bs-target="#guidelineCanvas" aria-controls="guidelineCanvas">
+              📄 GUIDELINE
+            </a>
+          </li>
+
+          {% if user.is_authenticated %}
+            {% if user.role == 'admin' %}
+
+              <!-- Quản lý Task -->
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/task/manage_task/' %}active{% endif %}"
+                   href="{% url 'task:manage_task' %}">Task Management</a>
+              </li>
+
+            
+              <!-- Quản lý Users -->
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/users/annotators/' %}active{% endif %}"
+                   href="{% url 'users:annotator_list' %}">User Management</a>
+              </li>
+            {% endif %}
+
+            {% if user.role == 'senior_annotator' or user.role == 'annotator' %}
+              <!-- Assignment -->
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/task/annotator/' %}active{% endif %}"
+                   href="{% url 'task:annotator_dashboard' %}">Assignment</a>
+              </li>
+            {% endif %}
+
+            <!-- Chung cho mọi user đã đăng nhập -->
+            <li class="nav-item">
+              {# Bắt đầu bằng '/users/profile' để active cả trang Profile và Edit Profile #}
+              <a class="nav-link {% if request.path|slice:':15' == '/users/profile' %}active{% endif %}"
+                 href="{% url 'users:profile' %}">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:logout' %}">Log Out</a>
+            </li>
+
+          {% else %}
+            <!-- Nếu chưa đăng nhập -->
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/users/login/' %}active{% endif %}"
+                 href="{% url 'users:login' %}">Log In</a>
+            </li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="container mt-4">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<!-- Offcanvas hướng dẫn -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="guidelineCanvas" aria-labelledby="guidelineCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="guidelineCanvasLabel">📄 GUIDELINE</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <iframe src="{% static 'docs/guideline.pdf' %}" width="100%" height="100%"
+            style="min-height: 80vh;" frameborder="0"></iframe>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

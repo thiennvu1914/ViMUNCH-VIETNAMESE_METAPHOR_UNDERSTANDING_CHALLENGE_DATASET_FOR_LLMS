@@ -1,0 +1,88 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">📋 Danh sách giao Task</h2>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Người gán nhãn</th>
+                    <th>Loại Task</th>
+                    <th style="width: 250px;">Tiến độ</th>
+                    <th>Trạng thái</th>
+                    <th>Hạn chót</th>
+                    <th>Ngày giao</th>
+                    <th>Hoàn thành lúc</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in assignments %}
+                {% with a=item.assignment %}
+                <tr>
+                    <!-- Người gán nhãn -->
+                    <td>{{ a.annotator.full_name }}</td>
+
+                    <!-- Loại task -->
+                    <td>{{ a.task_type }}</td>
+
+                    <!-- Tiến độ -->
+                    <td>
+                        <div>
+                            <div class="d-flex justify-content-between small fw-semibold">
+                                <span>{{ item.done }}/{{ item.total }}</span>
+                                <span>{{ item.percent }}%</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 6px;">
+                                <div
+                                    class="progress-bar 
+                                        {% if item.percent < 50 %}
+                                            bg-danger
+                                        {% elif item.percent < 90 %}
+                                            bg-warning
+                                        {% else %}
+                                            bg-success
+                                        {% endif %}"
+                                    role="progressbar"
+                                    style="width: {{ item.percent }}%"
+                                    aria-valuenow="{{ item.percent }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- Trạng thái -->
+                    <td>
+                        {% if a.status == 'assigned' %}
+                            <span class="text-warning fw-semibold">Chưa hoàn thành</span>
+                        {% else %}
+                            <span class="text-success fw-semibold">Hoàn thành</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Hạn chót -->
+                    <td>{{ a.deadline|date:"d/m/Y H:i" }}</td>
+
+                    <!-- Ngày giao -->
+                    <td>{{ a.assigned_at|date:"d/m/Y H:i" }}</td>
+
+                    <!-- Hoàn thành lúc -->
+                    <td>
+                        {% if a.completed_at %}
+                            {{ a.completed_at|date:"d/m/Y H:i" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endwith %}
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-3">Chưa có task nào được giao.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

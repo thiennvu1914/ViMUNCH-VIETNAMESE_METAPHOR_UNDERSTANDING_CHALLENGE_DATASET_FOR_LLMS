@@ -1,0 +1,135 @@
+{% extends 'base_generic.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h4 mb-1">Gán Task cho Annotator</h1>
+      <div class="text-muted">
+        Loại task: <span class="badge bg-primary">{{ selected_task_type }}</span>
+      </div>
+    </div>
+    <a href="{% url 'task:manage_task' %}" class="btn btn-outline-secondary">
+      ← Quay lại quản lý task
+    </a>
+  </div>
+
+  <!-- Flash messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Form card (centered) -->
+  <div class="row">
+    <div class="col-12 col-lg-8 mx-auto">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-0 py-3">
+          <h2 class="h6 mb-0">Thông tin phân công</h2>
+        </div>
+        <div class="card-body">
+          <form method="POST" id="assign-form" novalidate>
+            {% csrf_token %}
+
+            <!-- Annotator -->
+            <div class="mb-3">
+              <label for="id_annotator" class="form-label fw-semibold">Người gán nhãn</label>
+              <select name="annotator" id="id_annotator"
+                      class="form-select {% if form and form.errors.annotator %}is-invalid{% endif %}" required>
+                <option value="" disabled selected>— Chọn annotator —</option>
+                {% if form %}
+                  {% with sel=form.data.annotator %}
+                    {% for user in users %}
+                      <option value="{{ user.id }}"
+                        {% if sel and sel|stringformat:"s" == user.id|stringformat:"s" %}selected{% endif %}>
+                        {{ user.full_name }} ({{ user.username }})
+                      </option>
+                    {% endfor %}
+                  {% endwith %}
+                {% else %}
+                  {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.full_name }} ({{ user.username }})</option>
+                  {% endfor %}
+                {% endif %}
+              </select>
+              {% if form and form.errors.annotator %}
+                <div class="invalid-feedback">
+                  {% for e in form.errors.annotator %}{{ e }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Hidden task_type -->
+            <input type="hidden" name="task_type" value="{{ selected_task_type }}">
+
+            <!-- Sample Count -->
+            <div class="mb-3">
+              <label for="id_sample_count" class="form-label fw-semibold">Số lượng mẫu</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text"><i class="bi bi-collection"></i></span>
+                <input type="number" min="1" step="1" name="sample_count" id="id_sample_count" required
+                       class="form-control {% if form and form.errors.sample_count %}is-invalid{% endif %}"
+                       value="{% if form %}{{ form.data.sample_count }}{% endif %}" placeholder="Ví dụ: 50">
+                {% if form and form.errors.sample_count %}
+                  <div class="invalid-feedback">
+                    {% for e in form.errors.sample_count %}{{ e }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Deadline -->
+            <div class="mb-3">
+              <label for="id_deadline_date" class="form-label fw-semibold">Ngày deadline</label>
+              <input type="date" name="deadline" id="id_deadline_date" required
+                     class="form-control {% if form and form.errors.deadline %}is-invalid{% endif %}"
+                     value="{% if form %}{{ form.data.deadline }}{% endif %}">
+              {% if form and form.errors.deadline %}
+                <div class="invalid-feedback">
+                  {% for e in form.errors.deadline %}{{ e }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg" id="btn-submit">
+                <span class="me-2">Gán task</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: min deadline = today & prevent double submit -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Set min date = today
+    const dl = document.getElementById('id_deadline_date');
+    if (dl && !dl.min) {
+      const today = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      dl.min = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+    }
+
+    // Prevent double submit
+    const form = document.getElementById('assign-form');
+    const btn  = document.getElementById('btn-submit');
+    if (form && btn) {
+      form.addEventListener('submit', function () {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Đang gán...';
+      });
+    }
+  });
+</script>
+{% endblock %}

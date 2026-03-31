@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="fw-bold">Dashboard Tổng quan</h2>
+
+    <div class="row text-center mt-4">
+        <div class="col-md-4">
+            <div class="card border-primary shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Metaphor Interpretation</h5>
+                    <p class="card-text fs-4">{{ interpretation_done }}/{{ total_dataset }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Paraphrase Judgement</h5>
+                    <p class="card-text fs-4">{{ judgement_done }}/{{ interpretation_done }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-warning shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Metaphor Classification</h5>
+                    <p class="card-text fs-4">{{ classification_done }}/{{ judgement_done }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mt-5 fw-bold">Tiến độ Annotator</h4>
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Annotator</th>
+                    <th>Interpretation</th>
+                    <th>Judgement</th>
+                    <th>Classification</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in annotator_progress %}
+                <tr>
+                    <td>{{ item.annotator.username }}</td>
+                    <td>{{ item.interpretation }}</td>
+                    <td>{{ item.judgement }}</td>
+                    <td>{{ item.classification }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">Chưa có annotator nào.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

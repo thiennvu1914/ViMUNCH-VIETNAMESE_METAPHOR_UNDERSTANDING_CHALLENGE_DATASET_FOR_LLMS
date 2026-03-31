@@ -1,0 +1,350 @@
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Định dạng cơ bản */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Header */
+header {
+    background-color: #0066cc;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffdd57;
+}
+
+.logo a {
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Main container */
+.container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Responsive: Mobile */
+@media (max-width: 768px) {
+    .nav-links {
+        display: block;
+        text-align: center;
+    }
+
+    .nav-links li {
+        margin-bottom: 10px;
+    }
+}
+
+
+/* Kiểu chung cho trang */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    background-color: #007BFF;
+    color: white;
+    padding: 50px 20px;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.hero span {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.hero p {
+    font-size: 1.2em;
+}
+
+/* Welcome message */
+.user-welcome {
+    text-align: center;
+    font-size: 1.1em;
+    color: #333;
+    margin: 20px 0;
+}
+
+.user-welcome p {
+    margin-bottom: 20px;
+}
+
+.user-welcome .btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.user-welcome .btn:hover {
+    background-color: #218838;
+}
+
+/* Auth links */
+.auth-links {
+    text-align: center;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.auth-links .btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-links .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Container cho trang thay đổi mật khẩu */
+.password-change-container {
+    background-color: #ffffff;
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 500px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Tiêu đề */
+.password-change-container h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form */
+.password-change-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.password-change-container form .btn {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1.1em;
+}
+
+.password-change-container form .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Hiển thị thông báo */
+.messages {
+    margin-top: 20px;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.messages ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.messages ul li {
+    margin-bottom: 5px;
+}
+
+/* Container đăng nhập */
+.login-container {
+    background-color: #f9f9f9;
+    padding: 40px;
+    margin: 50px auto;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề đăng nhập */
+.login-container h2 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+/* Nhóm form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Định dạng cho các trường nhập liệu */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* Nút đăng nhập */
+.btn-submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Hiển thị thông báo lỗi */
+.error-messages {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.error-messages ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.error-messages ul li {
+    margin-bottom: 5px;
+}
+
+/* Container hồ sơ */
+.profile-container {
+    background-color: #f9f9f9;
+    padding: 40px;
+    margin: 50px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.profile-container h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+/* Form nhóm */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Các trường nhập liệu */
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* Nút cập nhật */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Hiển thị thông báo lỗi */
+.error-messages {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.error-messages ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.error-messages ul li {
+    margin-bottom: 5px;
+}

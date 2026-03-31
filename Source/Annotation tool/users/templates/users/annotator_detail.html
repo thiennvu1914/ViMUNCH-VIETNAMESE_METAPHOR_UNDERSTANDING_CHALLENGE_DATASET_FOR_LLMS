@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Chi tiết Annotator: {{ annotator.full_name }}</h2>
+        
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Tên đầy đủ:</th>
+                <td>{{ annotator.full_name }}</td>
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td>{{ annotator.email }}</td>
+            </tr>
+            <tr>
+                <th>Số điện thoại:</th>
+                <td>{{ annotator.phone }}</td>
+            </tr>
+            <tr>
+                <th>Chức vụ:</th>
+                <td>{{ annotator.get_role_display }}</td>
+            </tr>
+            <tr>
+                <th>Chuyên môn:</th>
+                <td>{{ annotator.expertise }}</td>
+            </tr>
+            <tr>
+                <th>Kinh nghiệm (năm):</th>
+                <td>{{ annotator.experience_years }}</td>
+            </tr>
+        </table>
+
+        <a href="{% url 'users:annotator_list' %}" class="btn btn-secondary">Trở lại</a>
+    </div>
+{% endblock %}

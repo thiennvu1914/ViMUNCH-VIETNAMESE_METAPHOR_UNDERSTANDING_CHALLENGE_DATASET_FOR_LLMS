@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="confetti-container mb-4">
+        🎉🎉🎉
+    </div>
+
+    <h2 class="fw-bold text-success">Chúc mừng bạn!</h2>
+    <p class="lead text-muted mb-4">
+        Bạn đã hoàn thành tất cả các câu được giao trong task này.<br>
+        Cảm ơn sự đóng góp quý báu của bạn cho dự án <strong>ViMUNCH</strong> 💚
+    </p>
+
+    <a href="{% url 'task:annotator_dashboard' %}" class="btn btn-primary btn-lg px-4">
+        <i class="bi bi-arrow-left-circle me-2"></i>Quay lại Dashboard
+    </a>
+</div>
+
+<style>
+  .confetti-container {
+    font-size: 3rem;
+    animation: float 2s ease-in-out infinite alternate;
+  }
+  @keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+  body {
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9f7ef 100%);
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base_generic.html" %}
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(120deg, #f6f9ff, #eef5ff);
+    }
+    .login-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem 2rem;
+        transition: all 0.3s ease;
+    }
+    .login-card:hover {
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
+    }
+    .login-title {
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1.8rem;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .form-label {
+        font-weight: 500;
+        color: #333;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        padding: 0.6rem 0.9rem;
+        transition: all 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+    }
+    .btn-login {
+        border: none;
+        width: 100%;
+        margin-top: 1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1.05rem;
+        background: linear-gradient(90deg, #007bff, #00b4d8);
+        transition: all 0.25s ease;
+    }
+    .btn-login:hover {
+        background: linear-gradient(90deg, #0069d9, #009fc4);
+        transform: scale(1.03);
+    }
+    .alert {
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6 col-lg-4">
+        <div class="login-card">
+            <h2 class="login-title">Đăng nhập hệ thống</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Tên đăng nhập</label>
+                    <input type="text" name="username" id="username" required class="form-control" placeholder="Nhập tên đăng nhập">
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="password" class="form-label">Mật khẩu</label>
+                    <input type="password" name="password" id="password" required class="form-control" placeholder="Nhập mật khẩu">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login shadow-sm">
+                    <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                </button>
+            </form>
+
+            {% if messages %}
+                <div class="alert alert-danger mt-3">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

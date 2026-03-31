@@ -1,0 +1,87 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Tasks</h3>
+
+<style>
+  .completed-t1 { background-color: rgba(0,123,255,.12); border-width: 3px!important; box-shadow: 0 0 .75rem rgba(0,0,0,.08)!important; }
+  .completed-pj { background-color: rgba(40,167,69,.12);  border-width: 3px!important; box-shadow: 0 0 .75rem rgba(0,0,0,.08)!important; }
+</style>
+
+{# Đúng với urls.py của bạn #}
+{% url 'task:metaphor_interpretation_and_classification_task' as T1_URL %}
+{% url 'task:paraphrase_judgement_entry' as PJ_URL %}
+
+<div class="row g-4">
+
+  <!-- Metaphor Interpretation & Classification (đã gộp) -->
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-primary
+      {% if assigned_interpret > 0 and completed_interpret == assigned_interpret %}completed-t1{% endif %}">
+      <div class="card-body d-flex flex-column">
+        <h5 class="fw-bold text-primary">
+          <i class="bi bi-lightbulb-fill me-1"></i> Metaphor Interpretation & Classification
+        </h5>
+        <p class="text-muted mt-2 mb-3">
+          Hoàn thành: {{ completed_interpret|default:0 }} / {{ assigned_interpret|default:0 }}
+        </p>
+        <div class="mt-auto">
+          <a href="{{ T1_URL }}" class="btn btn-outline-primary btn-sm">Annotate</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paraphrase Judgement -->
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-success
+      {% if assigned_judgement > 0 and completed_judgement == assigned_judgement %}completed-pj{% endif %}">
+      <div class="card-body d-flex flex-column">
+        <h5 class="fw-bold text-success">
+          <i class="bi bi-pencil-square me-1"></i> Paraphrase Judgement
+        </h5>
+        <p class="text-muted mt-2 mb-3">
+          Hoàn thành: {{ completed_judgement|default:0 }} / {{ assigned_judgement|default:0 }}
+        </p>
+        <div class="mt-auto">
+          <a href="{{ PJ_URL }}" class="btn btn-outline-success btn-sm">Annotate</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Progress Chart -->
+<div class="mt-5">
+  <h4 class="fw-bold mb-3">
+    <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Tiến độ cá nhân
+  </h4>
+  <canvas id="progressChart" height="120"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const pctT1 = Math.round(({{ completed_interpret|default:0 }} / {{ assigned_interpret|default:1 }}) * 100);
+  const pctPJ = Math.round(({{ completed_judgement|default:0 }} / {{ assigned_judgement|default:1 }}) * 100);
+
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Interpretation & Classification', 'Paraphrase Judgement'],
+      datasets: [{
+        data: [pctT1, pctPJ],
+        backgroundColor: ['rgba(0,123,255,.7)','rgba(40,167,69,.7)'],
+        borderColor: ['rgba(0,123,255,1)','rgba(40,167,69,1)'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.parsed.y}%` } } },
+      scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+    }
+  });
+</script>
+{% endblock %}
