@@ -46,5 +46,46 @@ The project designs a multitask processing flow for a comprehensive evaluation o
 - **`Source/Demo application/`**: A demo application built with Streamlit demonstrating the processing pipeline.
 - **`Source/Experiments with LLMs/`**: Experimental source code tested on models like Llama-3.1, Qwen2.5, Vistral, VinaLLaMA, etc.
 
+## 🚀 Run the Annotation Tool Locally
+
+### 1. Create the environment
+
+```bash
+cd "Source/Annotation tool"
+python -m venv .venv
+pip install -r requirements.txt
+```
+
+### 2. Configure credentials
+
+Set the required environment variables before starting Django. Never commit real credentials.
+
+```bash
+export DJANGO_SECRET_KEY="replace-with-a-new-random-secret"
+export DJANGO_DEBUG="True"
+export DB_NAME="ViMUNCH_annotation"
+export DB_USER="root"
+export DB_PASSWORD="your-local-password"
+export DB_HOST="localhost"
+export DB_PORT="3306"
+```
+
+On Windows PowerShell, use `$env:VARIABLE_NAME="value"` instead of `export`.
+
+Generate a new Django key with:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+### 3. Initialize and run
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+> Security: credentials previously committed to Git history must be rotated. Removing them from the current source does not invalidate exposed credentials.
+
 ## 🤝 Contribution
 For any contributions or requests to use this dataset for research purposes, please contact the authors via the information provided in the report.
