@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,11 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t+$r+gr@4vhjvi&eloq&qv)-doa%5#vi9wtmase(%ytq*nb#&z'
+# Security-sensitive configuration is loaded from environment variables.
+# Never commit real credentials to this repository.
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise RuntimeError('DJANGO_SECRET_KEY environment variable is required')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Keep this disabled outside local development.
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in {'1', 'true', 'yes'}
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -88,10 +92,11 @@ WSGI_APPLICATION = 'ViMUNCH.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ViMUNCH_annotation',
-        'USER': 'root',
-        'PASSWORD': 'Hnthiennvu1914.',
-        'HOST': 'localhost',
+        'NAME': os.getenv('DB_NAME', 'ViMUNCH_annotation'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
